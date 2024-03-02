@@ -1,0 +1,39 @@
+python main.py -s 15 -p 1 -c "pgv_pvid=522017599; ts_uid=6041087494; _qimei_uuid42=18207102c011000537bd633e875a2ea7605432df13; _qimei_fingerprint=1ba9ff7a31a750d04d992b430500d5e9; _qimei_q36=; _qimei_h38=101534bd37bd633e875a2ea70200000c518207; isHostDate=19773; PTTuserFirstTime=1708387200000; weekloop=0-0-0-8; p_uin=o0814846181; pt4_token=L09YxsRVGo*KlNIDexblI5vQcqsTv49nlDtUs4Ihrjg_; p_skey=fLPBjOnx1kfq3NZ*MF9laC1JvpjC*HJwsmnkBR1e0mQ_; tgp_id=23192981; tgp_ticket=9090EFAA341FA195287D68151F41130DB673D411A02489F8B60BDB830A3DBFE98849DE5B9F8D0DD1F1DA0ECA2C0D04206C11222EE1AF78410EE8C9596F8A860E4E6E07503E3575B95F8CAA87C82288C44E0B7A72DC965A3CD98754558A8719490C10054136EF33DDB188C5CF273C7209F5D84BF815165B26EFB08FC7182B771D; tgp_env=online; tgp_user_type=0; client_type=1; region=CN; client_type=1; region=CN; pgv_info=ssid=s413208436; tgp_biz_ticket=01000000000000000008ebfd561592d1c6264ce7364c18fea926214d73f1e5b075c833bb8d0e2406bce0997b0a14b8c0f8d5ed7ee044a151d84b6e6d997c57615150e0655172eb3dac; ts_last=www.wegame.com.cn/helper/lol/record/profile.html"
+
+
+1: "艾欧尼亚",2: "祖安",3: "诺克萨斯",4: "班德尔城",
+    5: "皮尔特沃夫",6: "战争学院",7: "巨神峰",8: "雷瑟守备",
+    9: "裁决之地",10: "黑色玫瑰",11: "暗影岛",12: "钢铁烈阳",
+    13: "水晶之痕",14: "均衡教派",15: "影流",16: "守望之海",
+    17: "征服之海",18: "卡拉曼达",19: "皮城警备"
+
+联盟一区
+祖安 皮尔特沃夫 巨神峰 教育网 男爵领域 均衡教派 影流 守望之海
+
+"battle_count": {
+        "total_match_games": 1493,
+        "total_match_wins": 740,
+        "total_match_losts": 753,
+        "total_arm_games": 678,
+        "total_arm_wins": 335,
+        "total_arm_losts": 343,
+        "total_rank_games": 310,
+        "total_rank_wins": 156,
+        "total_rank_losts": 153,
+        "total_teamrank_games": 245,
+        "total_teamrank_wins": 115,
+        "total_teamrank_losts": 129,
+        "total_games": 2899,
+        "total_wins": 1517,
+        "total_losts": 1380,
+        "total_ai_games": 173,
+        "total_ai_wins": 171,
+        "total_ai_losts": 2,
+        "total_clash_games": 0,
+        "total_clash_wins": 0,
+        "total_clash_losts": 0
+    },
+
+
+
+
