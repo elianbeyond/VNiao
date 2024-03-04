@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../VniaoHelper/.idea/VniaoHelper.iml" filepath="$PROJECT_DIR$/../VniaoHelper/.idea/VniaoHelper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/VniaoHelper-main.iml" filepath="$PROJECT_DIR$/.idea/VniaoHelper-main.iml" />
     </modules>
   </component>
 </project>

@@ -41,6 +41,8 @@ def get_results(server_no, page, cookie_str):
         with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
             futures = []
             while not exit_event.is_set():
+                if exit_event.is_set():
+                    break
                 page_info = f"大海页数：{vniao.page-1}到{vniao.page}"
                 print(page_info)
                 players, heroNums, ok = vniao.GetAccounts()
