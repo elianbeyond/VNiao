@@ -45,12 +45,12 @@ def get_results(server_no, page, cookie_str):
                     break
                 page_info = f"大海页数：{vniao.page-1}到{vniao.page}"
                 print(page_info)
-                players, heroNums, ok = vniao.GetAccounts()
+                players, heroNums, card_ids, ok = vniao.GetAccounts()
 
                 if not ok:
                     break
 
-                future = executor.submit(wegame.find_by_name_server_in_batch, players, heroNums)
+                future = executor.submit(wegame.find_by_name_server_in_batch, players, heroNums, card_ids)
                 futures.append(future)
 
                 if len(futures) == 2:

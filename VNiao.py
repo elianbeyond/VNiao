@@ -61,6 +61,7 @@ class Vniao:
         if page is not None:
             self.page = page
         self.goodsid = server_dict.get(server)
+        print(f"区号：{self.goodsid}\n")
 
     def GetAccounts(self):
         params = {
@@ -84,9 +85,10 @@ class Vniao:
 
         res = []
         heroNums = []
+        card_ids = []
 
         if len(response_dict['data']['data']) == 0:
-            return res, heroNums, False
+            return res, heroNums, card_ids, False
 
         for account in response_dict['data']['data']:
             tmp = account['draft'].split("----")
@@ -96,7 +98,8 @@ class Vniao:
                 continue
             res.append(name)
             heroNums.append(LegendsNum)
+            card_ids.append(account['id'])
 
         self.page += 1
 
-        return res, heroNums, True
+        return res, heroNums, card_ids, True

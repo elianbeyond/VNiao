@@ -221,7 +221,7 @@ class Wegame:
                 return response_dict['players']
         return []
 
-    def find_by_name_server(self, name, heroNum) -> (str, bool):
+    def find_by_name_server(self, name, heroNum, card_id) -> (str, bool):
         players = self._get_info_by_name(name)
         if len(players) == 0:
             print(f"未找到该ID:{name}")
@@ -239,7 +239,7 @@ class Wegame:
                         return "", False
 
                     res = f"Name: {name}, HeroNum: {heroNum}, Rate: {aram_wins / (aram_wins + aram_losts):.2%},Win: {aram_wins}, Loss: {aram_losts}, Net Loss: {net_loss}," \
-                          f" Last Game Time: {last_game_time}\n"
+                          f" Last Game Time: {last_game_time}, Card id: {card_id}\n"
                     game_id, isSuccess = self.get_recent_aram_battle_by_id(player['openid'])
                     if not isSuccess:
                         return "", False
@@ -265,13 +265,14 @@ class Wegame:
         print(f"未找到该ID:{name}")
         return "", False
 
-    def find_by_name_server_in_batch(self, names, heroNums) -> list:
+    def find_by_name_server_in_batch(self, names, heroNums, card_ids) -> list:
         res = []
         index = 0
         for name in tqdm(names):
             heroNum = heroNums[index]
+            card_id = card_ids[index]
             index = index + 1
-            battle_report, found = self.find_by_name_server(name, heroNum)
+            battle_report, found = self.find_by_name_server(name, heroNum, card_id)
             if found:
                 res.append(battle_report)
             # 防止API被封
