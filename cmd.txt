@@ -1,0 +1,49 @@
+python main.py -s 7 -p 1 -c "pgv_pvid=806919999; ts_uid=2855525820; PTTuserFirstTime=1710288000000; ts_refer=cn.bing.com/; weekloop=0-0-11-12; isHostDate=19801; _qimei_uuid42=18313121826100f764866f255c847bf2f5ef7a0924; _qimei_q36=; _qimei_h38=101529e464866f255c847bf202000000218313; _qimei_fingerprint=1ce0b5255d4c32a1e7a8297e248f4380; p_uin=o0814846181; pt4_token=YqXT*0zXBTAQ*xtz3p62ajiI5X1HrHM5eHmMT50l30c_; p_skey=oeBsvdfE86a-e5VwmjLIp4GSO1xUH-HVib7yNDN9ZwM_; tgp_id=23192981; tgp_ticket=70FD192E4F9E9C79ADDA3552844FB4B27D8AD4B15845BE6E9F3648F7442C7880D8C57D3B8D9CFBD4D64CD8590E9BB3367C5E0B1B535DDEEBA8BC3994D40CF2DE2257C54CD3890D52ECFAAF0A40E7E908BD7ACA8BB84690452E917002EEB2745DEDF0E1BB8CB3332DB33911B00C39FA8CFAAEDB28EDD092E8E253C71387E220E4; tgp_env=online; tgp_user_type=0; tgp_biz_ticket=01000000000000000047fce5a16ba03dd75129a378f5fe978628ea3bae7dbc2703f3118621d5b791ee911584a7e0dbcd3848faa1189079236d5e8c25b1af92f2624490e14bd2c4a982; client_type=1; region=CN; client_type=1; region=CN"
+
+ 
+
+python buy.py -s 51 -c 1360385
+88970615
+1: "艾欧尼亚",2: "祖安",3: "诺克萨斯",4: "班德尔城",
+    5: "皮尔特沃夫",6: "战争学院",7: "巨神峰",8: "雷瑟守备",
+    9: "裁决之地",10: "黑色玫瑰",11: "暗影岛",12: "钢铁烈阳",
+    13: "水晶之痕",14: "均衡教派",15: "影流",16: "守望之海",
+    17: "征服之海",18: "卡拉曼达",19: "皮城警备"
+
+联盟一区：祖安、皮尔特沃夫、巨神峰、教育网、男爵领域、均衡教派、影流、守望之海
+
+联盟二区：卡拉曼达、暗影岛、征服之海、诺克萨斯、战争学院、雷瑟守备
+
+联盟三区：班德尔城、裁决之地、水晶之痕、钢铁烈阳、皮城警备
+
+联盟四区：比尔吉沃特、弗雷尔卓德、扭曲丛林
+
+联盟五区：德玛西亚、无畏先锋、恕瑞玛、巨龙之巢
+
+"battle_count": {
+        "total_match_games": 1493,
+        "total_match_wins": 740,
+        "total_match_losts": 753,
+        "total_arm_games": 678,
+        "total_arm_wins": 335,
+        "total_arm_losts": 343,
+        "total_rank_games": 310,
+        "total_rank_wins": 156,
+        "total_rank_losts": 153,
+        "total_teamrank_games": 245,
+        "total_teamrank_wins": 115,
+        "total_teamrank_losts": 129,
+        "total_games": 2899,
+        "total_wins": 1517,
+        "total_losts": 1380,
+        "total_ai_games": 173,
+        "total_ai_wins": 171,
+        "total_ai_losts": 2,
+        "total_clash_games": 0,
+        "total_clash_wins": 0,
+        "total_clash_losts": 0
+    },
+
+
+
+
