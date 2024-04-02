@@ -93,8 +93,8 @@ class Vniao:
 
         for account in response_dict['data']['data']:
             tmp = account['draft'].split("----")
-            name = tmp[0]
-            hero_info = tmp[2].split(":")[1].split("|")[0]  # 获取英雄信息字符串并分割
+            name = tmp[1]
+            hero_info = tmp[3].split(":")[1].split("|")[0]  # 获取英雄信息字符串并分割
             if hero_info:
                 LegendsNum = int(hero_info)  # 将英雄信息字符串转换为整数
             else:
