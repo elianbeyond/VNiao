@@ -67,7 +67,7 @@ class Vniao:
         params = {
             "commodityId": self.goodsid,
             "page": self.page,
-            "limit": 5,
+            # "limit": 5,
             "race": "",
         }
 
@@ -95,7 +95,10 @@ class Vniao:
             tmp = account['draft'].split("----")
             name = tmp[0]
             hero_info = tmp[2].split(":")[1].split("|")[0]  # 获取英雄信息字符串并分割
-            LegendsNum = int(hero_info)  # 将英雄信息字符串转换为整数
+            if hero_info:
+                LegendsNum = int(hero_info)  # 将英雄信息字符串转换为整数
+            else:
+                LegendsNum = 999  # 如果hero_info为空，则将LegendsNum设置为999
             if LegendsNum < LegendNumMin:
                 continue
             res.append(name)
