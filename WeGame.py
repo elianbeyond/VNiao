@@ -298,7 +298,7 @@ class Wegame:
                         if not isSuccess:
                             win_rate.append("隐藏狗")
                         else:
-                            if win + lose == 0:
+                            if win +  lose == 0:
                                 win_rate.append("没有记录")
                             else:
                                 win_rate.append(f"{win / (win + lose) * 100:.1f}%")
