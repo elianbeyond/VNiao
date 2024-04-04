@@ -46,7 +46,7 @@ params = {
     "captcha": "",
     "commodity_id": commodity_id,
     "card_id": card_id,
-    "pay_id": "9",
+    "pay_id": "12",
     "device": "0",
     "from": "1220",
     "race": ""

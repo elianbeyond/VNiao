@@ -93,6 +93,8 @@ class Vniao:
         for account in response_dict['data']['data']:
             tmp = account['draft'].split("----")
             name = tmp[1]
+            if len(tmp[3].split(":")[-1]) == 0:
+                continue
             LegendsNum = int(tmp[3].split(":")[-1])
             if LegendsNum < LegendNumMin:
                 continue

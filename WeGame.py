@@ -125,10 +125,17 @@ class Wegame:
         for td in team_details:
             teams[td['teamId']] = []
         for pd in player_details:
-            teams[pd['teamId']].append(pd['openid'])
+            area_id = pd['translate_areaId']
+            if len(area_id) == 0:
+                area_id = self.server
+            teams[pd['teamId']].append({'open_id':pd['openid'], 'area_id': area_id})
+
         # find the team containing the input id
         for v in teams.values():
-            if id not in v:
+            vv = []
+            for x in v:
+                vv.append(x['open_id'])
+            if id not in vv:
                 return v, True
         return [], False
 
@@ -161,6 +168,26 @@ class Wegame:
             "area": self.server,
             "from_src": "lol_helper",
             "id": id,
+            "sids": [255]
+        }
+
+        # 发送POST请求
+        response = postRetry(GetBattleReportURL, headers, self.cookie, json.dumps(data))
+
+        response_dict = json.loads(response.content)
+        battle_count_dict = response_dict['battle_count']
+        if battle_count_dict is None:
+            return 1, 0, False
+        arm_wins = battle_count_dict['total_arm_wins']
+        arm_losts = battle_count_dict['total_arm_losts']
+        return arm_wins, arm_losts, True
+
+    def _get_battle_report_by_dict(self, d, name=None) -> (str, bool):
+        data = {
+            "account_type": 2,
+            "area": d['area_id'],
+            "from_src": "lol_helper",
+            "id": d['open_id'],
             "sids": [255]
         }
 
@@ -248,7 +275,7 @@ class Wegame:
                         return "", False
                     win_rate = []
                     for enemy in enemies:
-                        win, lose, isSuccess = self._get_battle_report_by_id(enemy)
+                        win, lose, isSuccess = self. _get_battle_report_by_dict(enemy)
                         if not isSuccess:
                             win_rate.append("隐藏狗")
                         else:
