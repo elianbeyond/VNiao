@@ -148,19 +148,36 @@ class Wegame:
             "id": id,
             "offset": 0
         }
+        # 初始化赢和输的计数器
+        wins = 0
+        losses = 0
+        resString = []
 
         response = postRetry(GetBattleListURL, headers, self.cookie, json.dumps(data))
         response_dict = json.loads(response.content)
         if response_dict['battles'] is None:
-            return "", False
+            return "", False,wins,losses,resString
         battles = response_dict['battles']
         if len(battles) == 0:
-            return "", False
+            return "", False,wins,losses,resString
         battle = battles[0]
         if 'game_id' not in battle:
-            return "", False
+            return "", False,wins,losses,resString
         game_id = battle['game_id']
-        return game_id, True
+        # 遍历每一场比赛，获取当前比赛的结果
+
+
+        for battle in response_dict['battles']:
+            result = battle['win']
+            if result == 'Win':
+                wins += 1
+                resString.append("赢")
+            elif result == 'Fail':
+                losses += 1
+                resString.append("输")
+        res_string = "/".join(resString)
+
+        return game_id, True,wins,losses,res_string
 
     def _get_battle_report_by_id(self, id, name=None) -> (str, bool):
         data = {
@@ -267,19 +284,21 @@ class Wegame:
 
                     res = f"Name: {name}, HeroNum: {heroNum}, Rate: {aram_wins / (aram_wins + aram_losts):.2%},Win: {aram_wins}, Loss: {aram_losts}, Net Loss: {net_loss}," \
                           f" Last Game Time: {last_game_time}, Card id: {card_id}\n"
-                    game_id, isSuccess = self.get_recent_aram_battle_by_id(player['openid'])
+                    game_id, isSuccess, wins, losses, resString = self.get_recent_aram_battle_by_id(player['openid'])
                     if not isSuccess:
                         return "", False
                     enemies, isSuccess = self.get_battle_detail_by_game_id(player['openid'], game_id)
                     if not isSuccess:
                         return "", False
                     win_rate = []
+                    win_rate.append("最近乱斗" + str(wins) + "赢" + str(losses) + "输")
+                    win_rate.append(resString)
                     for enemy in enemies:
                         win, lose, isSuccess = self. _get_battle_report_by_dict(enemy)
                         if not isSuccess:
                             win_rate.append("隐藏狗")
                         else:
-                            if win + lose == 0:
+                            if win +  lose == 0:
                                 win_rate.append("没有记录")
                             else:
                                 win_rate.append(f"{win / (win + lose) * 100:.1f}%")
