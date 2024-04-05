@@ -95,7 +95,7 @@ class Vniao:
             name = tmp[1]
             if len(tmp[3].split(":")[-1]) == 0:
                 continue
-            LegendsNum = int(tmp[3].split(":")[-1])
+            LegendsNum = int((tmp[3].split("|")[0]).split(":")[-1])
             if LegendsNum < LegendNumMin:
                 continue
             res.append(name)
