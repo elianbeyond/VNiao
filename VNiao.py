@@ -8,10 +8,10 @@ LegendNumMin = 130
 
 Domain = "vn.vmp.cc"
 
-GetAccountURL = f"https://16.xzlol.cn/user/api/index/card"
+GetAccountURL = f"https://shy.xzlol.cn/user/api/index/card"
 
 headers = {
-    "authority": "https://16.xzlol.cn/",
+    "authority": "https://shy.xzlol.cn/",
     "method": "GET",
     "path": "/user/api/index/card?commodityId=50&page=2&race=",
     "scheme": "https",
@@ -89,7 +89,20 @@ class Vniao:
 
         if len(response_dict['data']['data']) == 0:
             return res, heroNums, card_ids, False
+        # 格式为123456----影流----有情芍药含春泪丶#33586----等级:644----英雄:是167，请你改写上面的python代码|皮肤:270----单:白银Ⅲ胜点:59-最高段位:铂金|组:无-最高段位:白银----人脸:无----令牌:无----
+        # for account in response_dict['data']['data']:
+        #     tmp = account['draft'].split("----")
+        #     name = tmp[2].split("#")[0]  # 提取名称，并去除#及其后面的内容
+        #     if len(tmp[3].split(":")[-1]) == 0:
+        #         continue
+        #     LegendsNum = int((tmp[3].split("|")[0]).split(":")[-1])
+        #     if LegendsNum < LegendNumMin:
+        #         continue
+        #     res.append(name)
+        #     heroNums.append(LegendsNum)
+        #     card_ids.append(account['id'])
 
+        # 格式为影流----杀猪去00----等级:118----英雄:88|皮肤:12----单:无|组:无----人脸:无----令牌:无----
         for account in response_dict['data']['data']:
             tmp = account['draft'].split("----")
             name = tmp[1]

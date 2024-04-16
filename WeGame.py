@@ -171,10 +171,10 @@ class Wegame:
             result = battle['win']
             if result == 'Win':
                 wins += 1
-                resString.append("赢")
+                resString.append("√")
             elif result == 'Fail':
                 losses += 1
-                resString.append("输")
+                resString.append("×")
         res_string = "/".join(resString)
 
         return game_id, True,wins,losses,res_string
