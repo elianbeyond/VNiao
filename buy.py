@@ -8,8 +8,6 @@ import time
 import zlib
 from urllib.parse import urlencode
 
-TradeURL = f"https://16.xzlol.cn/user/api/order/trade"
-PayURL = f"https://16.xzlol.cn"
 
 headers = {
     "authority": "16.xzlol.cn",
@@ -33,8 +31,19 @@ headers = {
 parser = argparse.ArgumentParser(description='史迪仔买号')
 parser.add_argument('-s', type=int, required=True, help='commodity_id')
 parser.add_argument('-c', type=int, required=True, help='card_id')
+parser.add_argument('-i', type=int, default=0, required=True, help='is The shy')
 
 args = parser.parse_args()
+
+is_idol = args.i
+
+domain = f"16.xzlol.cn"
+
+if is_idol == 1:
+    domain = f"shy.xddfk.cn"
+
+TradeURL = f"https://{domain}/user/api/order/trade"
+PayURL = f"https://{domain}"
 
 commodity_id = args.s
 card_id= args.c
