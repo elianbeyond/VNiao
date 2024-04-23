@@ -3,21 +3,29 @@ import argparse
 
 import requests
 import json
-import re
-import time
-import zlib
-from urllib.parse import urlencode
 
+parser = argparse.ArgumentParser(description='史迪仔买号')
+parser.add_argument('-s', type=int, required=True, help='commodity_id')
+parser.add_argument('-c', type=int, required=True, help='card_id')
+
+args = parser.parse_args()
+
+
+domain = f"gt.xzlol.cn"
+
+TradeURL = f"https://{domain}/user/api/order/trade"
+PayURL = f"https://{domain}"
 
 headers = {
-    "authority": "16.xzlol.cn",
+    # "authority": domain,
     "accept": "*/*",
     "accept-language": "zh-CN,zh;q=0.9",
     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-    "cookie": "_aihecong_chat_channelIds=%5B%7B%22customerId%22%3A%2265e854d4cd3bde47891d0e5d%22%2C%22channelId%22%3A%220IOt7b%22%7D%5D; ACG-SHOP=ra91bpd983fke9dj2isgjiqhen; _aihecong_chat_address=%7B%22city%22%3A%22%E5%B9%BF%E5%B7%9E%22%2C%22region%22%3A%22%E5%B9%BF%E4%B8%9C%22%2C%22country%22%3A%22%E4%B8%AD%E5%9B%BD%22%7D; _aihecong_chat_visibility=true",
-    "origin": "https://16.xzlol.cn",
-    "referer": "https://16.xzlol.cn/",
-    "sec-ch-ua": "\"Chromium\";v=\"122\", \"Not(A:Brand\";v=\"24\", \"Google Chrome\";v=\"122\"",
+    "cookie": "_aihecong_chat_channelIds=%5B%7B%22customerId%22%3A%2265c20798c505f02da2529374%22%2C%22channelId%22%3A%220IOt7b%22%7D%5D; __51vcke__KNgVAhHAvqA2au2f=7d2d1a6e-67b7-558f-a715-685b02532cad; __51vuft__KNgVAhHAvqA2au2f=1713276794198; guardok=u7F6HqSwTVKp9Ej8MzyrvsbPV64WcF7lpAj+cHYvWDHZgLh5f2N/Hk6UGJGJ4r9uUpYeregplcEtaSnqNgV/tA==; ACG-SHOP=gpud6lo7a52cicklc1tvu0ddht; _aihecong_chat_address=%7B%22city%22%3A%22%E8%A1%A1%E9%98%B3%22%2C%22region%22%3A%22%E6%B9%96%E5%8D%97%22%2C%22country%22%3A%22%E4%B8%AD%E5%9B%BD%22%7D; __vtins__KNgVAhHAvqA2au2f=%7B%22sid%22%3A%20%226b1be34b-0304-5859-9692-75ad815e1ff7%22%2C%20%22vd%22%3A%201%2C%20%22stt%22%3A%200%2C%20%22dr%22%3A%200%2C%20%22expires%22%3A%201713787057052%2C%20%22ct%22%3A%201713785257052%7D; __51uvsct__KNgVAhHAvqA2au2f=5; _aihecong_chat_visibility=true",
+    "origin": f"https://{domain}",
+    "referer": f"https://{domain}/",
+    'priority': 'u=1, i',
+    'sec-ch-ua': '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
     "sec-ch-ua-mobile": "?0",
     "sec-ch-ua-platform": "\"Windows\"",
     "sec-fetch-dest": "empty",
@@ -27,23 +35,6 @@ headers = {
     "x-requested-with": "XMLHttpRequest"
 }
 
-
-parser = argparse.ArgumentParser(description='史迪仔买号')
-parser.add_argument('-s', type=int, required=True, help='commodity_id')
-parser.add_argument('-c', type=int, required=True, help='card_id')
-parser.add_argument('-i', type=int, default=0, required=True, help='is The shy')
-
-args = parser.parse_args()
-
-is_idol = args.i
-
-domain = f"16.xzlol.cn"
-
-if is_idol == 1:
-    domain = f"shy.xddfk.cn"
-
-TradeURL = f"https://{domain}/user/api/order/trade"
-PayURL = f"https://{domain}"
 
 commodity_id = args.s
 card_id= args.c
@@ -57,11 +48,11 @@ params = {
     "card_id": card_id,
     "pay_id": "12",
     "device": "0",
-    "from": "1220",
+    "from": "1596",
     "race": ""
     }
 
-response = requests.post(TradeURL, headers=headers, data=params, timeout=(5, 7))
+response = requests.post(TradeURL, headers=headers, data=params, timeout=10)
 
 response_dict = json.loads(response.content)
 

@@ -1,3 +1,4 @@
+import threading
 import time
 
 import requests
@@ -68,6 +69,10 @@ server_dict = {
     "峡谷之巅": 31
 }
 
+lock = threading.Lock()
+# 标志操作是否已完成
+is_operating = False
+
 
 def cookie_str_to_dict(cookie_str) -> dict:
     cookie_dict = {}
@@ -96,7 +101,9 @@ def postRetry(url, headers, cookies, data):
 
 class Wegame:
 
-    def __init__(self, cookie_str, server_name):
+    def __init__(self, server_name, driver):
+        self.driver = driver
+        cookie_str = self.driver.cookie_str
         self.cookie = cookie_str_to_dict(cookie_str)
         self.server = server_dict.get(server_name)
 
@@ -255,9 +262,23 @@ class Wegame:
             response = postRetry(SearchPlayerURL, headers, self.cookie, json.dumps(data))
             response_dict = json.loads(response.content)
             if response_dict['result']['error_code'] == 8000022:
-                if input(
-                        f"机器验证，扣1重试，其他跳过，重试链接：https://www.wegame.com.cn/helper/lol/frame.html?navid=27 ") == '1':
-                    continue
+                global is_operating
+                with lock:
+                    status = is_operating
+                if status:
+                    while True:
+                        with lock:
+                            if not is_operating:
+                                break
+                        time.sleep(2)
+                else:
+                    with lock:
+                        is_operating = True
+                    self.driver.capcha()
+                    with lock:
+                        is_operating = False
+                continue
+
             if response_dict['players'] is None:
                 print(response.content)
                 return []
@@ -283,7 +304,7 @@ class Wegame:
                         return "", False
 
                     res = f"Name: {name}, HeroNum: {heroNum}, Rate: {aram_wins / (aram_wins + aram_losts):.2%},Win: {aram_wins}, Loss: {aram_losts}, Net Loss: {net_loss}," \
-                          f" Last Game Time: {last_game_time}, Card id: {card_id}\n"
+                          f" Last Game Time: {last_game_time}, Command: {card_id}\n"
                     game_id, isSuccess, wins, losses, resString = self.get_recent_aram_battle_by_id(player['openid'])
                     if not isSuccess:
                         return "", False
@@ -298,7 +319,7 @@ class Wegame:
                         if not isSuccess:
                             win_rate.append("隐藏狗")
                         else:
-                            if win +  lose == 0:
+                            if win + lose == 0:
                                 win_rate.append("没有记录")
                             else:
                                 win_rate.append(f"{win / (win + lose) * 100:.1f}%")
