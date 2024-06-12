@@ -7,18 +7,47 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import shutil
+import datetime
+from VNiao import domain
+from WeGame import cookie_str_to_dict
 
 
 class Driver:
     def __init__(self):
         self.cookie = {}
         self.cookie_str = ''
+        self.file_name = 'wegame_cookies.txt'
+        today = datetime.date.today().isoformat()
+
+        try:
+            date_str, self.cookie_str = self.read_data(self.file_name)
+        except FileNotFoundError:
+            date_str, self.cookie_str = None, None
+
+        if not date_str or date_str != today:
+            self.login()
+        self.cookie = cookie_str_to_dict(self.cookie_str)
+    def write_data(self, filename, data):
+        today = datetime.date.today().isoformat()
+        with open(filename, 'w') as file:
+            file.write(f"{today}\n{data}")
+
+    def read_data(self, filename):
+        with open(filename, 'r') as file:
+            lines = file.readlines()
+            if not lines or len(lines) < 2:
+                return None, None
+            date_str = lines[0].strip()
+            data_str = lines[1].strip()
+            return date_str, data_str
 
     def start_driver(self):
         # 设置 WebDriver 路径
         driver_path = './chromedriver-win64/chromedriver.exe'
         service = Service(executable_path=driver_path)
         chrome_options = Options()
+        user_data_dir = r"user-data-dir=C:\Users\QingYuAn\Desktop\VniaoHelper\VNiao\chromedriver-win64\cache"
+        chrome_options.add_argument(user_data_dir)
         chrome_options.add_argument("--disable-blink-features=AutomationControlled")
         chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
         chrome_options.add_experimental_option('useAutomationExtension', False)
@@ -47,6 +76,9 @@ class Driver:
         cookies = driver.get_cookies()
         self.cookie = cookies
         self.cookie_str = '; '.join([f"{cookie['name']}={cookie['value']}" for cookie in self.cookie])
+
+        self.write_data(self.file_name, self.cookie_str)
+
         # 关闭浏览器
         driver.close()
         
@@ -56,8 +88,9 @@ class Driver:
         try:
             driver.get("https://www.wegame.com.cn/helper/lol/search/index.html")
             if self.cookie:
-                for cookie in self.cookie:
-                    driver.add_cookie(cookie)
+                for name, value in self.cookie.items():
+                    # driver.add_cookie(cookie)
+                    driver.add_cookie({'name': name, 'value': value})
 
             driver.refresh()
 
@@ -93,12 +126,20 @@ def get_vniao_cookie():
     driver_path = './chromedriver-win64/chromedriver.exe'
     service = Service(executable_path=driver_path)
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
+    user_data_dir = r"user-data-dir=C:\Users\QingYuAn\Desktop\VniaoHelper\VNiao\chromedriver-win64\cache"
+    chrome_options.add_argument(user_data_dir)
+    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    chrome_options.add_experimental_option('useAutomationExtension', False)
 
     # 创建 WebDriver 实例
     driver = webdriver.Chrome(service=service, options=chrome_options)
-    driver.get("https://gt.xzlol.cn")
-    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "product")))  # 最多等待10秒
+
+    driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+    driver.get(f"https://{domain}")
+    WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.CLASS_NAME, "card-title"))
+    )  # 最多等待10秒
     # 转换 cookies 为字符串
     cookies = driver.get_cookies()
     cookie_str = '; '.join([f"{cookie['name']}={cookie['value']}" for cookie in cookies])
