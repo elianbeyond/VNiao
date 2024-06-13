@@ -6,9 +6,8 @@ import time
 
 LegendNumMin = 130
 
-Domain = "vn.vmp.cc"
-
-GetAccountURL = f"https://mx.youyoupay.com/getKaAccount"
+domain = "vn.vmp.cc"
+GetAccountURL = f"https://wn.vmp.cc/shop/shop/getAccount"
 
 headers = {
 ##    "authority": Domain,
@@ -28,25 +27,25 @@ headers = {
 }
 
 server_dict = {
-    "艾欧尼亚": 1545,
-    "祖安": 1546,
-    "诺克萨斯": 1547,
-    "班德尔城": 1548,
-    "皮尔特沃夫": 1551,
-    "战争学院": 1550,
-    "巨神峰": 1549,
-    "雷瑟守备": 1552,
-    "裁决之地": 1553,
-    "黑色玫瑰": 1554,
-    "暗影岛": 1555,
-    "钢铁烈阳": 1556,
-    "水晶之痕": 1557,
-    "均衡教派": 1558,
-    "影流": 1559,
-    "守望之海": 1560,
-    "征服之海": 1561,
-    "卡拉曼达": 1562,
-    "皮城警备": 1576
+    "艾欧尼亚": 51981,  # 从班德尔城的下一个值开始
+    "祖安": 51977,
+    "诺克萨斯": 51983,
+    "班德尔城": 51979,  # 保持不变
+    "皮尔特沃夫": 51980,  # 保持不变
+    "战争学院": 51984,
+    "巨神峰": 51981,
+    "雷瑟守备": 51986,
+    "裁决之地": 51987,
+    "黑色玫瑰": 51988,
+    "暗影岛": 51989,
+    "钢铁烈阳": 51990,
+    "水晶之痕": 51991,
+    "均衡教派": 51992,
+    "影流": 51989,
+    "守望之海": 51990,
+    "征服之海": 51995,
+    "卡拉曼达": 51996,
+    "皮城警备": 51997  # 假设这是最后一个服务器，值继续递增
 }
 
 
@@ -61,7 +60,7 @@ class Vniao:
         data = {
             "goodsid": self.goodsid,
             "page": self.page,
-            "userid": "xUg49hDmDb7esMzNDeZ5Yg==",
+            "userid": "50",
             "type": "new"
         }
 
@@ -86,8 +85,8 @@ class Vniao:
 
         for account in response_dict['data']:
             tmp = account['number']
-            name = tmp['3']
-            LegendsNum = int(tmp['5'].split("英雄:")[-1].split('|')[0])
+            name = tmp['3'].split("#")[0]
+            LegendsNum = int(tmp['4'].split("英雄:")[-1].split('----')[0])
             if LegendsNum < LegendNumMin:
                 continue
             res.append(name)

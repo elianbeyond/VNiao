@@ -81,16 +81,30 @@ class Driver:
 
         # 关闭浏览器
         driver.close()
-        
 
     def capcha(self):
         driver = self.start_driver()
         try:
             driver.get("https://www.wegame.com.cn/helper/lol/search/index.html")
+            print("已打开网页")
+
             if self.cookie:
-                for name, value in self.cookie.items():
-                    # driver.add_cookie(cookie)
-                    driver.add_cookie({'name': name, 'value': value})
+                print("开始添加cookie")
+                for cookie_dict in self.cookie:
+                    if 'value' in cookie_dict:  # 确保有value字段
+                        # 创建一个只包含必要字段的新字典
+                        cookie_to_add = {
+                            'name': cookie_dict['name'],
+                            'value': cookie_dict['value'],
+                            # 如果需要的话，也可以添加domain等其他字段
+                            # 'domain': cookie_dict.get('domain', ''),
+                            # 'path': cookie_dict.get('path', '/'),
+                            # ... 其他可能需要的字段
+                        }
+                        driver.add_cookie(cookie_to_add)
+                    else:
+                        print(f"Skipping cookie with name {cookie_dict['name']} because it has no value.")
+                print("已添加cookie")
 
             driver.refresh()
 
@@ -107,19 +121,20 @@ class Driver:
 
             WebDriverWait(driver, 5).until(
                 EC.visibility_of_element_located((By.ID, "tcaptcha_transform_dy"))
-            )  # 最多等待30秒
+            )  # 最多等待5秒
 
             WebDriverWait(driver, 30).until(
                 EC.invisibility_of_element_located((By.ID, "tcaptcha_transform_dy"))
-            ) # 最多等待30秒
+            )  # 最多等待30秒
         except Exception as e:
-            print("发生异常:", e)
+            print("验证码消失发生异常:", e)
         finally:
             # 关闭浏览器
             try:
                 driver.close()
-            except:
-                pass
+                print("已关闭浏览器")
+            except Exception as close_exception:
+                print("关闭浏览器时发生异常:", close_exception)
 
 def get_vniao_cookie():
     # 设置 WebDriver 路径
