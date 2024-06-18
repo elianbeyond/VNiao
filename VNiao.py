@@ -7,7 +7,7 @@ import time
 
 LegendNumMin = 130
 
-domain = 'shy.xzlol.cn'
+domain = 'shy.xddfk.cn'
 
 GetAccountURL = f"https://{domain}/user/api/index/card"
 
@@ -27,34 +27,44 @@ headers = {
 }
 
 
+# server_dict = {
+#     "艾欧尼亚": 50,
+#     "祖安": 51,
+#     "诺克萨斯": 52,
+#     "班德尔城": 53,
+#     "皮尔特沃夫": 54,
+#     "战争学院": 55,
+#     "巨神峰": 56,
+#     "雷瑟守备": 57,
+#     "裁决之地": 58,
+#     "黑色玫瑰": 59,
+#     "暗影岛": 60,
+#     "钢铁烈阳": 61,
+#     "水晶之痕": 62,
+#     "均衡教派": 63,
+#     "影流": 64,
+#     "守望之海": 65,
+#     "征服之海": 66,
+#     "卡拉曼达": 67,
+#     "皮城警备": 68,
+#     "比尔吉沃特": 69,
+#     "德玛西亚": 70,
+#     "弗雷尔卓德": 71,
+#     "无畏先锋": 72,
+#     "扭曲丛林": 73,
+#     "巨龙之巢": 74,
+#     "恕瑞玛": 75,
+#     "男爵领域": 120
+# }
+
 server_dict = {
-    "艾欧尼亚": 50,
-    "祖安": 51,
-    "诺克萨斯": 52,
-    "班德尔城": 53,
-    "皮尔特沃夫": 54,
-    "战争学院": 55,
-    "巨神峰": 56,
-    "雷瑟守备": 57,
-    "裁决之地": 58,
-    "黑色玫瑰": 59,
-    "暗影岛": 60,
-    "钢铁烈阳": 61,
-    "水晶之痕": 62,
-    "均衡教派": 63,
-    "影流": 64,
-    "守望之海": 65,
-    "征服之海": 66,
-    "卡拉曼达": 67,
-    "皮城警备": 68,
-    "比尔吉沃特": 69,
-    "德玛西亚": 70,
-    "弗雷尔卓德": 71,
-    "无畏先锋": 72,
-    "扭曲丛林": 73,
-    "巨龙之巢": 74,
-    "恕瑞玛": 75,
-    "男爵领域": 120
+    "艾欧尼亚": 466,
+    "黑色玫瑰": 467,
+    "联盟一区": 468,
+    "联盟二区": 469,
+    "联盟三区": 470,
+    "联盟四区": 471,
+    "联盟五区": 472,
 }
 
 class Vniao:
@@ -92,6 +102,7 @@ class Vniao:
         res = []
         heroNums = []
         card_ids = []
+        server_names = []
 
         if len(response_dict['data']['data']) == 0:
             return res, heroNums, card_ids, False
@@ -127,8 +138,9 @@ class Vniao:
                 continue
             res.append(name)
             heroNums.append(LegendsNum)
+            server_names.append(tmp[0])
             card_ids.append(f"-s {self.goodsid} -c {account['id']}")
 
         self.page += 1
 
-        return res, heroNums, card_ids, True
+        return res, heroNums, card_ids, server_names, True

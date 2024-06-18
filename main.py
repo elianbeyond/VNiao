@@ -8,20 +8,17 @@ import threading
 from get_cookie import Driver, get_vniao_cookie
 
 server_dict_inverse = {
-    1: ["均衡教派", "影流", "守望之海", "皮尔特沃夫", "巨神峰", "祖安", "男爵领域"],
-    2: ["卡拉曼达", "暗影岛", "征服之海", "诺克萨斯", "战争学院", "雷瑟守备"],
-    3: ["班德尔城", "裁决之地", "水晶之痕", "钢铁烈阳", "皮城警备"],
-    4: ["比尔吉沃特", "弗雷尔卓德", "扭曲丛林"],
-    5: ["德玛西亚", "无畏先锋", "恕瑞玛", "巨龙之巢"],
-    6: ["艾欧尼亚"],
-    7: ["黑色玫瑰"],
+    1: "联盟一区",
+    2: "联盟二区",
+    3: "联盟三区",
+    4: "联盟四区",
+    5: "联盟五区",
+    6: "艾欧尼亚",
+    7: "黑色玫瑰",
 }
 
 driver = None
-# vniao_cookie = None
-vniao_cookie = "_aihecong_chat_channelIds=%5B%7B%22customerId%22%3A%2265c20798c505f02da2529374%22%2C%22channelId%22%3A%220IOt7b%22%7D%5D; __51vcke__KNgVAhHAvqA2au2f=7d2d1a6e-67b7-558f-a715-685b02532cad; __51vuft__KNgVAhHAvqA2au2f=1713276794198; ACG-SHOP=1h5lreu50t04f0imo9q8qe0vs2; guardok=6gjtK0zzt1u7wzUPxjBfSc5Ge7+jB0x863p2WpFJZOUmwcg9N4j5ep0YHYAAZgV6E04fwkxNUUaeJifdy3o3nA==; __51uvsct__KNgVAhHAvqA2au2f=13; _aihecong_chat_iframeopen=true; __vtins__KNgVAhHAvqA2au2f=%7B%22sid%22%3A%20%222cd1288b-99f5-54c0-a624-fa2ee2375aa9%22%2C%20%22vd%22%3A%202%2C%20%22stt%22%3A%208982%2C%20%22dr%22%3A%208982%2C%20%22expires%22%3A%201718116239012%2C%20%22ct%22%3A%201718114439012%7D; _aihecong_chat_visibility=true"
-
-vniao_cookie = WeGame.cookie_str_to_dict(get_vniao_cookie())
+vniao_cookie = None
 
 # 创建一个事件对象，用于线程之间的通信
 exit_event = threading.Event()
@@ -42,7 +39,7 @@ def get_results(server_name, page, output_file):
                 break
             page_info = f"大海页数：{vniao.page - 1}到{vniao.page}"
             print(page_info)
-            players, heroNums, card_ids, ok = vniao.GetAccounts()
+            players, heroNums, card_ids, server_names, ok = vniao.GetAccounts()
 
             if not ok:
                 break
@@ -50,9 +47,9 @@ def get_results(server_name, page, output_file):
             if not driver:
                 driver = Driver()
             if not wegame:
-                wegame = WeGame.Wegame(server_name, driver)
+                wegame = WeGame.Wegame(driver)
 
-            future = executor.submit(wegame.find_by_name_server_in_batch, players, heroNums, card_ids)
+            future = executor.submit(wegame.find_by_name_server_in_batch, players, heroNums, card_ids, server_names)
             futures.append(future)
 
             if len(futures) == 2:
@@ -73,6 +70,7 @@ def get_results(server_name, page, output_file):
         output_file.flush()
 
 def main():
+    global vniao_cookie
     print('''
     1: 联盟1区--祖安、皮尔特沃夫、巨神峰、男爵领域、均衡教派、影流、守望之海
     2: 联盟2区--卡拉曼达、暗影岛、征服之海、诺克萨斯、战争学院、雷瑟守备
@@ -89,12 +87,13 @@ def main():
 
     args = parser.parse_args()
 
-    server_names = server_dict_inverse.get(args.s)
+    server_name = server_dict_inverse.get(args.s)
 
     output_file = open(f"records/{time.strftime('%Y%m%d_%H%M%S', time.localtime())}_联盟{args.s}区.txt", "w")
 
-    for server_name in server_names:
-        get_results(server_name, args.p, output_file)
+    vniao_cookie = WeGame.cookie_str_to_dict(get_vniao_cookie())
+
+    get_results(server_name, args.p, output_file)
 
 
 if __name__ == '__main__':

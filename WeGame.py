@@ -101,17 +101,16 @@ def postRetry(url, headers, cookies, data):
 
 class Wegame:
 
-    def __init__(self, server_name, driver):
+    def __init__(self, driver):
         self.driver = driver
         cookie_str = self.driver.cookie_str
         self.cookie = cookie_str_to_dict(cookie_str)
-        self.server = server_dict.get(server_name)
 
-    def get_battle_detail_by_game_id(self, id, game_id):
+    def get_battle_detail_by_game_id(self, id, game_id, server):
         data = {
             "account_type": 2,
             "id": id,
-            "area": self.server,
+            "area": server,
             "game_id": game_id,
             "from_src": "lol_helper"
         }
@@ -134,7 +133,7 @@ class Wegame:
         for pd in player_details:
             area_id = pd['translate_areaId']
             if len(area_id) == 0:
-                area_id = self.server
+                area_id = server
             teams[pd['teamId']].append({'open_id':pd['openid'], 'area_id': area_id})
 
         # find the team containing the input id
@@ -146,10 +145,10 @@ class Wegame:
                 return v, True
         return [], False
 
-    def get_recent_aram_battle_by_id(self, id):
+    def get_recent_aram_battle_by_id(self, id, server):
         data = {
             "account_type": 2,
-            "area": self.server,
+            "area": server,
             "from_src": "lol_helper",
             "filter": "aram",
             "id": id,
@@ -186,10 +185,10 @@ class Wegame:
 
         return game_id, True,wins,losses,res_string
 
-    def _get_battle_report_by_id(self, id, name=None) -> (str, bool):
+    def _get_battle_report_by_id(self, id, server) -> (str, bool):
         data = {
             "account_type": 2,
-            "area": self.server,
+            "area": server,
             "from_src": "lol_helper",
             "id": id,
             "sids": [255]
@@ -206,7 +205,7 @@ class Wegame:
         arm_losts = battle_count_dict['total_arm_losts']
         return arm_wins, arm_losts, True
 
-    def _get_battle_report_by_dict(self, d, name=None) -> (str, bool):
+    def _get_battle_report_by_dict(self, d) -> (str, bool):
         data = {
             "account_type": 2,
             "area": d['area_id'],
@@ -226,10 +225,10 @@ class Wegame:
         arm_losts = battle_count_dict['total_arm_losts']
         return arm_wins, arm_losts, True
 
-    def _get_recent_game_time(self, id) -> str:
+    def _get_recent_game_time(self, id, server) -> str:
         data = {
             "account_type": 2,
-            "area": self.server,
+            "area": server,
             "from_src": "lol_helper",
             "id": id,
         }
@@ -286,29 +285,30 @@ class Wegame:
                 return response_dict['players']
         return []
 
-    def find_by_name_server(self, name, heroNum, card_id) -> (str, bool):
+    def find_by_name_server(self, name, heroNum, card_id, server_name) -> (str, bool):
+        server = server_dict[server_name]
         players = self._get_info_by_name(name)
         if len(players) == 0:
             print(f"未找到该ID:{name}")
             return "", False
 
         for player in players:
-            if player['area'] == self.server:
-                aram_wins, aram_losts, isSuccess = self._get_battle_report_by_id(player['openid'], name)
+            if player['area'] == server:
+                aram_wins, aram_losts, isSuccess = self._get_battle_report_by_id(player['openid'], server)
                 if not isSuccess:
                     return "", False
                 net_loss = aram_losts - aram_wins
                 if net_loss >= NetLossMin:
-                    last_game_time = self._get_recent_game_time(player['openid'])
+                    last_game_time = self._get_recent_game_time(player['openid'], server)
                     if last_game_time == "":
                         return "", False
 
                     res = f"Name: {name}, HeroNum: {heroNum}, Rate: {aram_wins / (aram_wins + aram_losts):.2%},Win: {aram_wins}, Loss: {aram_losts}, Net Loss: {net_loss}," \
-                          f" Last Game Time: {last_game_time}, Command: {card_id}\n"
-                    game_id, isSuccess, wins, losses, resString = self.get_recent_aram_battle_by_id(player['openid'])
+                          f" Last Game Time: {last_game_time}, Region: {server_name}, Command: {card_id}\n"
+                    game_id, isSuccess, wins, losses, resString = self.get_recent_aram_battle_by_id(player['openid'], server)
                     if not isSuccess:
                         return "", False
-                    enemies, isSuccess = self.get_battle_detail_by_game_id(player['openid'], game_id)
+                    enemies, isSuccess = self.get_battle_detail_by_game_id(player['openid'], game_id, server)
                     if not isSuccess:
                         return "", False
                     win_rate = []
@@ -332,14 +332,15 @@ class Wegame:
         print(f"未找到该ID:{name}")
         return "", False
 
-    def find_by_name_server_in_batch(self, names, heroNums, card_ids) -> list:
+    def find_by_name_server_in_batch(self, names, heroNums, card_ids, server_names) -> list:
         res = []
         index = 0
         for name in tqdm(names):
             heroNum = heroNums[index]
             card_id = card_ids[index]
+            server_name = server_names[index]
             index = index + 1
-            battle_report, found = self.find_by_name_server(name, heroNum, card_id)
+            battle_report, found = self.find_by_name_server(name, heroNum, card_id, server_name)
             if found:
                 res.append(battle_report)
             # 防止API被封
