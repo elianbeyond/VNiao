@@ -37,8 +37,6 @@ def get_results(server_name, page, output_file):
         while not exit_event.is_set():
             if exit_event.is_set():
                 break
-            page_info = f"大海页数：{vniao.page - 1}到{vniao.page}"
-            print(page_info)
             players, heroNums, card_ids, server_names, ok = vniao.GetAccounts()
 
             if not ok:
@@ -57,7 +55,7 @@ def get_results(server_name, page, output_file):
                 concurrent.futures.wait(futures)
                 for future in futures:
                     res = future.result()
-                    output_file.write(page_info + "\n")
+                    # output_file.write(page_info + "\n")
                     output_file.write("\n".join(res) + "\n")
                     output_file.flush()
                 futures.clear()
@@ -65,8 +63,6 @@ def get_results(server_name, page, output_file):
     # Write the results of the remaining tasks to the file
     for future in futures:
         res = future.result()
-        output_file.write(page_info + "\n")
-        output_file.write("\n".join(res) + "\n")
         output_file.flush()
 
 def main():

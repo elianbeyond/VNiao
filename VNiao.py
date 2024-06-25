@@ -4,26 +4,35 @@ import json
 import re
 import time
 
-
 LegendNumMin = 130
 
 domain = 'shy.xddfk.cn'
 
 GetAccountURL = f"https://{domain}/user/api/index/card"
 
+session = requests.Session()
+
+session.headers.update({
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+})
+
 headers = {
-    "Accept": "*/*",
-    "Accept-Encoding": "gzip, deflate, br, zstd",
-    "Accept-Language": "zh-CN,zh;q=0.9",
-    "Referer": f"https://{domain}/",
-    "Sec-Fetch-Dest": "empty",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Site": "same-origin",
-    "X-Requested-With": "XMLHttpRequest",
-    "sec-ch-ua": '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": '"Windows"',
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+    'authority': domain,
+    'method': 'GET',
+    'path': '/user/api/index/card?commodityId=468&page=1&limit=10&race=',
+    'scheme': 'https',
+    'accept': '*/*',
+    'accept-encoding': 'gzip, deflate, br, zstd',
+    'accept-language': 'zh-CN,zh;q=0.9',
+    'priority': 'u=1, i',
+    'referer': f'https://{domain}/',
+    'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Windows"',
+    'sec-fetch-dest': 'empty',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-site': 'same-origin',
+    'x-requested-with': 'XMLHttpRequest'
 }
 
 
@@ -78,6 +87,7 @@ class Vniao:
         self.name_ind = 2
         self.legend_ind = 4
         self.cookies = cookies
+        session.cookies.update(self.cookies)
 
 
     def GetAccounts(self):
@@ -89,7 +99,8 @@ class Vniao:
 
         for i in range(8):  # 循环去请求网站
             try:
-                response = requests.get(GetAccountURL, headers=headers, params=params, timeout=(5, 7), cookies=self.cookies)
+                # response = requests.get(GetAccountURL, headers=headers, params=params, timeout=(5, 7), cookies=self.cookies)
+                response = session.get(GetAccountURL, headers=headers, params=params)
             except requests.RequestException as e:
                 print(f"Vniao连接异常，尝试重新连接")
                 time.sleep(5)
@@ -105,7 +116,7 @@ class Vniao:
         server_names = []
 
         if len(response_dict['data']['data']) == 0:
-            return res, heroNums, card_ids, False
+            return res, heroNums, card_ids, server_names, False
         # 格式为123456----影流----有情芍药含春泪丶#33586----等级:644----英雄:是167，请你改写上面的python代码|皮肤:270----单:白银Ⅲ胜点:59-最高段位:铂金|组:无-最高段位:白银----人脸:无----令牌:无----
         # for account in response_dict['data']['data']:
         #     tmp = account['draft'].split("----")
